@@ -1,0 +1,54 @@
+<html>
+    <form name=jogador id="jogador_form" >
+        <label>Nome:</label><input type="text" id="nome" name="nome">
+        <br/>
+        <label>Time:</label><input type="text" id="time" name="time">
+        <br/>
+        <label>Posicao:</label>
+        
+        <!--CAIXA DE SELEÇÃO -->
+        <select id="myCombo">
+            <option value="opcao1">atacante</option>
+            <option value="opcao2">zagueiro</option>
+            <option value="opcao2">lateral</option>
+            <option value="opcao2">goleiro</option>
+        </select>
+        
+        <!--BOTÃO DE ENVIO-->
+        <input type="submit" id="envio" name="envio">
+        <br/>
+        <!--RESULTADO DO FORM-->
+        <div><p id="resp" name="resp"></p></div>
+    
+    </form>
+    
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript">
+        $('#jogador_form').submit(function(e) {
+                e.preventDefault();
+
+
+                var jogador = {
+                    nome: $('[name=nome]').val(),
+                    time: $('[name=time]').val(),
+                    posicao: $('#myCombo option:selected').text()
+                }
+
+                $.ajax({
+                    type: 'POST',
+                        url: '/api/exemplo',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(jogador),
+                        success: function(callback) {
+                            console.log(callback);
+                            $("#jogador_form").trigger('reset');
+                            $('#resp').text(callback.nome +'-'+ callback.time +'-'+ callback.posicao);
+                        },
+                        error: function() {
+                            $(this).html("error!");
+                        }
+                });
+        });
+    </script>
+</html>
